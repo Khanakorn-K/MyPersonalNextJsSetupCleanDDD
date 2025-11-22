@@ -6,9 +6,9 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 async function fetchWrapper<T>(endpoint: string, config: RequestConfig = {}): Promise<T> {
   const { params, ...init } = config;
-  
+
   let url = `${BASE_URL}${endpoint}`;
-  
+
   if (params) {
     const searchParams = new URLSearchParams(params);
     url += `?${searchParams.toString()}`;
@@ -31,15 +31,15 @@ async function fetchWrapper<T>(endpoint: string, config: RequestConfig = {}): Pr
 }
 
 export const apiClient = {
-  get: <T>(endpoint: string, config?: RequestConfig) => 
+  get: <T>(endpoint: string, config?: RequestConfig) =>
     fetchWrapper<T>(endpoint, { ...config, method: 'GET' }),
 
-  post: <T>(endpoint: string, body: unknown, config?: RequestConfig) => 
+  post: <T>(endpoint: string, body: unknown, config?: RequestConfig) =>
     fetchWrapper<T>(endpoint, { ...config, method: 'POST', body: JSON.stringify(body) }),
 
-  put: <T>(endpoint: string, body: unknown, config?: RequestConfig) => 
+  put: <T>(endpoint: string, body: unknown, config?: RequestConfig) =>
     fetchWrapper<T>(endpoint, { ...config, method: 'PUT', body: JSON.stringify(body) }),
 
-  delete: <T>(endpoint: string, config?: RequestConfig) => 
+  delete: <T>(endpoint: string, config?: RequestConfig) =>
     fetchWrapper<T>(endpoint, { ...config, method: 'DELETE' }),
 };

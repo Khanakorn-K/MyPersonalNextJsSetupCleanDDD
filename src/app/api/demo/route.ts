@@ -1,4 +1,4 @@
-import { DemoData } from '@/features/demo/entity/DemoData';
+import { DemoDataEntity } from '@/features/demo/entity/DemoData';
 import { NextResponse } from 'next/server';
 
 // GET /api/demo - List all items
@@ -8,7 +8,7 @@ export async function GET() {
 
   return NextResponse.json({
     data: [
-      { id: '1', message: 'Item 1', timestamp: Date.now() },
+      { id: '1', message: 'Item 1', timeÍstamp: Date.now() },
       { id: '2', message: 'Item 2', timestamp: Date.now() },
     ],
     success: true,
@@ -18,7 +18,7 @@ export async function GET() {
 // POST /api/demo - Create new item
 export async function POST(request: Request) {
   try {
-    const body: DemoData = await request.json();
+    const body: DemoDataEntity = await request.json();
 
     // Simulate database creation
     const newItem = {

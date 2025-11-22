@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/theme-provider";
+import Providers from "@/components/_app";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +21,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} min-h-screen flex flex-col`}>
-        <ThemeProvider
+        <Providers>
+          <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
@@ -30,6 +32,7 @@ export default function RootLayout({
           <main className="flex-1 container mx-auto px-4 py-8">{children}</main>
           <Footer />
         </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

@@ -1,8 +1,16 @@
+'use client'
+
 import Link from "next/link";
 import { ModeToggle } from "./ModeToggle";
 import Image from "next/image";
+import { signOut, useSession } from "next-auth/react";
+import { Button } from "../ui/Button";
+import SearchBar from "../searchBar";
 
 export const Navbar = () => {
+
+  const session = useSession()
+
   return (
     <nav className="border-b bg-white dark:bg-gray-900 dark:border-gray-800">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -18,8 +26,9 @@ export const Navbar = () => {
             height={52}
           />
         </Link>
-
+        <SearchBar />
         <div className="flex gap-4  items-center">
+
           <Link
             href="/"
             className="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
@@ -27,13 +36,26 @@ export const Navbar = () => {
             Home
           </Link>
 
-          <Link
-            href="/post"
-            className="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-          >
-            post
-          </Link>
           <ModeToggle />
+          {session.data ? (
+            <Button
+              variant="destructive"
+              onClick={() => signOut()}
+            >
+              Sign out
+            </Button>
+          ) : (
+            <Button
+              className="bg-green-500"
+            >
+              <Link
+                href="/login"
+                className="text-sm text-white"
+              >
+                เข้าสู่ระบบ
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
     </nav>

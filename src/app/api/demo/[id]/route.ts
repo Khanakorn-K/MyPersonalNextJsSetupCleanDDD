@@ -1,4 +1,4 @@
-import { DemoData } from '@/features/demo/entity/DemoData';
+import { DemoDataEntity } from '@/features/demo/entity/DemoData';
 import { NextResponse } from 'next/server';
 
 interface RouteParams {
@@ -32,10 +32,12 @@ export async function PUT(request: Request, { params }: RouteParams) {
   const { id } = await params;
 
   try {
-    const body: DemoData = await request.json();
+    const body: DemoDataEntity = await request.json();
+
+    const { id: _bodyId, ...rest } = body;
 
     return NextResponse.json({
-      data: { id, ...body, timestamp: Date.now() },
+      data: { id, ...rest, timestamp: Date.now() },
       message: 'Item updated successfully',
       success: true,
     });
