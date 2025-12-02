@@ -1,5 +1,5 @@
 
-import { TagsResponseResultModel } from "@/modelGlobal/TagsResponseModel";
+import { TagsResponseResultModel } from "@/model/TagsResponseModel";
 import { globalDataSource } from "@/services/globalDataSource";
 import { useEffect, useState } from "react";
 

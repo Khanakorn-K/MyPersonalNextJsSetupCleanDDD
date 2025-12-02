@@ -18,6 +18,8 @@ const PostList = () => {
           displayDisplayCreateAt={post.displayDisplayCreateAt}
           authorImage={post.authorImage}
           authorName={post.authorName}
+          categories={post.categories}
+          tags={post.tags}
         />
       ))}
 

@@ -1,9 +1,9 @@
-// Helper function to generate slug from title
 export function generateSlug(title: string): string {
+  if (!title) return "";
   return title
     .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
+    .trim()
+    .replace(/[^\w\s\u0E00-\u0E7F-]/g, "") // ✅ เพิ่ม \u0E00-\u0E7F ให้รองรับภาษาไทย
     .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .trim();
+    .replace(/-+/g, "-");
 }

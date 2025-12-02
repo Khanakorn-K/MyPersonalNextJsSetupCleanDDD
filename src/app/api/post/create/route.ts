@@ -2,130 +2,101 @@ import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import prisma from "@/lib/prisma";
-import { generateSlug } from "@/utils/generateSlug";
 
-// POST /api/post - Create a new post
+function generateSlug(title: string): string {
+  if (!title) return "";
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s\u0E00-\u0E7F-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-
     const body = await request.json();
     const { title, excerpt, content, coverImage, published, categories, tags } =
       body;
 
-    // Validate required fields
     if (!title || !content) {
       return NextResponse.json(
-        {
-          success: false,
-          data: null,
-          message: "Title and content are required",
-        },
+        { success: false, message: "Title and content are required" },
         { status: 400 }
       );
     }
 
-    // Generate slug from title
-    const baseSlug = generateSlug(title);
+    const baseSlug = generateSlug(title) || `post-${Date.now()}`;
     let slug = baseSlug;
     let counter = 1;
 
-    // Ensure slug is unique
     while (await prisma.post.findUnique({ where: { slug } })) {
       slug = `${baseSlug}-${counter}`;
       counter++;
     }
 
-    // TODO: Get authorId from session
-    // For now, we'll need to get the first user or create a default user
-    // สำหรับทดสอบอย่าลืมกลับมาแก้
     const author = session?.user ?? (await prisma.user.findFirst());
 
     if (!author) {
       return NextResponse.json(
-        {
-          success: false,
-          data: null,
-          message: "No user found. Please create a user first.",
-        },
+        { success: false, message: "No user found." },
         { status: 400 }
       );
     }
 
-    // Process categories - connect existing or create new ones
-    const categoryConnections = [];
+    const categoryIds: { id: string }[] = [];
     if (categories && Array.isArray(categories) && categories.length > 0) {
-      for (const categoryName of categories) {
-        if (!categoryName || typeof categoryName !== "string") continue;
-
-        const categorySlug = generateSlug(categoryName);
-
-        // Find or create category
-        const category = await prisma.category.upsert({
-          where: { slug: categorySlug },
-          update: {},
-          create: {
-            name: categoryName,
-            slug: categorySlug,
-          },
-        });
-
-        categoryConnections.push({ id: category.id });
-      }
+      const results = await Promise.all(
+        categories.map(async (name: string) => {
+          const s = generateSlug(name) || `cat-${Date.now()}-${Math.random()}`;
+          return prisma.category.upsert({
+            where: { slug: s },
+            update: {},
+            create: { name, slug: s },
+          });
+        })
+      );
+      results.forEach((c) => categoryIds.push({ id: c.id }));
     }
 
-    // Process tags - connect existing or create new ones
-    const tagConnections = [];
+    const tagIds: { id: string }[] = [];
     if (tags && Array.isArray(tags) && tags.length > 0) {
-      for (const tagName of tags) {
-        if (!tagName || typeof tagName !== "string") continue;
-
-        const tagSlug = generateSlug(tagName);
-
-        // Find or create tag
-        const tag = await prisma.tag.upsert({
-          where: { slug: tagSlug },
-          update: {},
-          create: {
-            name: tagName,
-            slug: tagSlug,
-          },
-        });
-
-        tagConnections.push({ id: tag.id });
-      }
+      const results = await Promise.all(
+        tags.map(async (name: string) => {
+          const s = generateSlug(name) || `tag-${Date.now()}-${Math.random()}`;
+          return prisma.tag.upsert({
+            where: { slug: s },
+            update: {},
+            create: { name, slug: s },
+          });
+        })
+      );
+      results.forEach((t) => tagIds.push({ id: t.id }));
     }
 
-    // Create post with categories and tags
     const post = await prisma.post.create({
       data: {
         title,
         slug,
         excerpt: excerpt || null,
         content,
-        coverImage: coverImage,
+        coverImage,
         published: published || false,
         publishedAt: published ? new Date() : null,
         author: {
-          connect: {
-            id: author.id,
-          },
+          connect: { id: author.id },
         },
         categories: {
-          connect: categoryConnections,
+          connect: categoryIds,
         },
         tags: {
-          connect: tagConnections,
+          connect: tagIds,
         },
       },
       include: {
         author: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            image: true,
-          },
+          select: { id: true, name: true, email: true, image: true },
         },
         categories: true,
         tags: true,
@@ -140,14 +111,8 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error creating post:", error);
-    const errorMessage =
-      error instanceof Error ? error.message : "Failed to create post";
     return NextResponse.json(
-      {
-        success: false,
-        data: null,
-        message: errorMessage,
-      },
+      { success: false, message: "Failed to create post" },
       { status: 500 }
     );
   }
@@ -168,34 +133,36 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const categoryConnections = [];
-    if (categories && Array.isArray(categories)) {
-      for (const catName of categories) {
-        const slug = generateSlug(catName);
-        const category = await prisma.category.upsert({
-          where: { slug },
-          create: { name: catName, slug },
-          update: {},
-        });
-        categoryConnections.push({ id: category.id });
-      }
+    const categoryIds: { id: string }[] = [];
+    if (categories && Array.isArray(categories) && categories.length > 0) {
+      const results = await Promise.all(
+        categories.map(async (name: string) => {
+          const s = generateSlug(name) || `cat-${Date.now()}-${Math.random()}`;
+          return prisma.category.upsert({
+            where: { slug: s },
+            update: {},
+            create: { name, slug: s },
+          });
+        })
+      );
+      results.forEach((c) => categoryIds.push({ id: c.id }));
     }
 
-    // Process Tags
-    const tagConnections = [];
-    if (tags && Array.isArray(tags)) {
-      for (const tagName of tags) {
-        const slug = generateSlug(tagName);
-        const tag = await prisma.tag.upsert({
-          where: { slug },
-          create: { name: tagName, slug },
-          update: {},
-        });
-        tagConnections.push({ id: tag.id });
-      }
+    const tagIds: { id: string }[] = [];
+    if (tags && Array.isArray(tags) && tags.length > 0) {
+      const results = await Promise.all(
+        tags.map(async (name: string) => {
+          const s = generateSlug(name) || `tag-${Date.now()}-${Math.random()}`;
+          return prisma.tag.upsert({
+            where: { slug: s },
+            update: {},
+            create: { name, slug: s },
+          });
+        })
+      );
+      results.forEach((t) => tagIds.push({ id: t.id }));
     }
 
-    // Update Post
     const updatedPost = await prisma.post.update({
       where: { id },
       data: {
@@ -207,11 +174,11 @@ export async function PUT(request: NextRequest) {
         updatedAt: new Date(),
         categories: {
           set: [],
-          connect: categoryConnections,
+          connect: categoryIds,
         },
         tags: {
           set: [],
-          connect: tagConnections,
+          connect: tagIds,
         },
       },
     });

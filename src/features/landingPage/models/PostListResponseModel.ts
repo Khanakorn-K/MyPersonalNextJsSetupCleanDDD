@@ -1,20 +1,34 @@
-
 export interface PostListResponseModel {
-  id: string | null;
-  authorId: string | null;
-  content: string | null;
-  coverImage: string | null;
-  createdAt: string | null;
-  excerpt: string | null;
-  published: boolean | false;
-  publishedAt: string | null;
-  slug: string[] | [null];
-  title: string | null;
-  updateAt: string | null;
-  message: string | null;
-  timestamp: number | null;
-  author?: {
-    name: string | null;
-    image: string | null;
-  } | null;
+  success: boolean;
+  data: PostListResponseResutlModel[];
+}
+
+export interface PostListResponseResutlModel {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  coverImage: string;
+  published: boolean;
+  publishedAt: string;
+  authorId: string;
+  createdAt: string;
+  updatedAt: string;
+  author: Author;
+  categories: Category[];
+  tags: Category[];
+}
+
+export interface Author {
+  id: string;
+  name: string;
+  email: string;
+  image: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
 }

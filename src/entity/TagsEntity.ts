@@ -1,4 +1,4 @@
-import { TagsResponseResultModel } from "@/modelGlobal/TagsResponseModel";
+import { TagsResponseResultModel } from "@/model/TagsResponseModel";
 
 export class TagsEntity {
   id: string;

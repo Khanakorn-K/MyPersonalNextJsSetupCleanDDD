@@ -18,13 +18,16 @@ export default function CreatePostIndex() {
     removeTag,
     removeCategory,
     router,
+    postId,
   } = useCreatePost();
 
   return (
     <div className="container mx-auto max-w-4xl py-8 px-4">
       <Card className="shadow-lg">
         <CardHeader>
-          <CardTitle className="text-3xl font-bold">Create New Post</CardTitle>
+          <CardTitle className="text-3xl font-bold">
+            {postId ? "UpdatePost" : "Create New Post"}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -216,7 +219,11 @@ export default function CreatePostIndex() {
                 disabled={isLoading}
                 className="flex-1 py-6 text-base font-semibold"
               >
-                {isLoading ? "Creating..." : "Create Post"}
+                {postId
+                  ? "UpdatePost"
+                  : isLoading
+                  ? "Creating..."
+                  : "Create Post"}
               </Button>
               <Button
                 type="button"

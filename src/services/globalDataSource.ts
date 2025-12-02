@@ -1,6 +1,6 @@
 import { TagsEntity } from "@/entity/TagsEntity";
 import { apiClient } from "@/lib/api-client";
-import { TagsResponseModel } from "@/modelGlobal/TagsResponseModel";
+import { TagsResponseModel } from "@/model/TagsResponseModel";
 import { ApiResponse } from "@/types/api";
 
 export const globalDataSource = {

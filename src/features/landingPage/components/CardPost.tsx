@@ -6,16 +6,17 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/Button";
 const CardPost = ({
-  id = "1",
+  id = "",
   content = "นี่คือ mock content สำหรับโพสต์ตัวอย่าง",
   coverImage = "",
   displayDisplayCreateAt = "2024-01-01",
-  slug = ["mock-post"],
+  slug = "mock-post",
   title = "Mock Post Title",
   authorImage = mockImageData(),
   authorName = "anonymounse",
+  categories = [],
+  tags = [],
 }: Partial<PostListentity>) => {
-  const session = useSession();
   return (
     <article className="group w-1/2 h-1/2 relative flex flex-col overflow-hidden rounded-2xl bg-card text-card-foreground shadow-sm ring-1 ring-border transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
       {/* Image Section */}
@@ -29,11 +30,27 @@ const CardPost = ({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-        {/* Tag */}
-        <div className="absolute left-4 top-4">
-          <span className="inline-flex items-center rounded-full bg-background/90 px-2.5 py-0.5 text-xs font-medium text-foreground backdrop-blur-sm shadow-sm">
-            {Array.isArray(slug) ? slug[0] : slug}
-          </span>
+        {/* categories */}
+        <div className="absolute left-4 top-4 flex gap-2 flex-wrap">
+          {categories.map((category) => (
+            <span
+              key={category.id}
+              className="inline-flex items-center rounded-full bg-background/90 px-2.5 py-0.5 text-xs font-medium text-foreground backdrop-blur-sm shadow-sm"
+            >
+              {category.name}
+            </span>
+          ))}
+        </div>
+        {/* tag */}
+        <div className="absolute right-4 top-4 flex gap-2 flex-wrap">
+          {tags.map((tag) => (
+            <span
+              key={tag.id}
+              className="inline-flex items-center rounded-full bg-background/90 px-2.5 py-0.5 text-xs font-medium text-foreground backdrop-blur-sm shadow-sm"
+            >
+              {tag.name}
+            </span>
+          ))}
         </div>
       </div>
 
@@ -71,7 +88,10 @@ const CardPost = ({
               className="rounded-full w-10 h-10"
             />
             <h2>ผู้เขียน : {authorName}</h2>
-            <Link className="bg-red-600 p-2 rounded-full" href={`createPost?postId=${id}`}>
+            <Link
+              className="bg-red-600 p-2 rounded-full"
+              href={`createPost?postId=${id}`}
+            >
               <p>แก้ไข้</p>
             </Link>
           </div>
