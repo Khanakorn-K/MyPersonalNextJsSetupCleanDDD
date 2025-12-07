@@ -1,5 +1,5 @@
 "use client";
-import { Home, Tag, ChevronDown, CardSim } from "lucide-react";
+import { Home, Tag, ChevronDown, CardSim, BrushCleaning } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -23,9 +23,12 @@ import Link from "next/link";
 import useStoreTag from "@/store/useStoreTag";
 import { Button } from "./ui/Button";
 import useStoreCategories from "@/store/useStoreCategories";
+import { resetAllStores } from "@/store/restAllStore";
 
 export function AppSidebar() {
+  //เอาไว้แค่ดึงค่ามาแสดง
   const { tags, category } = useGlobal();
+  // จัดการ State filter
   const setTag = useStoreTag((state) => state.setTag);
   const clearTag = useStoreTag((state) => state.clearTag);
   const setCategories = useStoreCategories((state) => state.setCategory);
@@ -37,7 +40,14 @@ export function AppSidebar() {
       icon: Home,
     },
     {
+      title: "ClearFilter",
+      url: "/",
+      icon: BrushCleaning,
+      onClick: () => resetAllStores(),
+    },
+    {
       title: "Tags",
+      url: "/",
       icon: Tag,
       items: tags.map((tag) => ({
         title: tag.name,
@@ -72,10 +82,11 @@ export function AppSidebar() {
                   {item.items && item.items.length > 0 ? (
                     <Collapsible className="group/collapsible">
                       <CollapsibleTrigger asChild>
-                        <SidebarMenuButton>
-                          <item.icon />
-                          <span>{item.title}</span>
-                          <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                        <SidebarMenuButton asChild>
+                          <Link href={item.url || "#"} onClick={item.onClick}>
+                            <item.icon />
+                            <span>{item.title}</span>
+                          </Link>
                         </SidebarMenuButton>
                       </CollapsibleTrigger>
                       <CollapsibleContent>
@@ -100,7 +111,10 @@ export function AppSidebar() {
                     </Collapsible>
                   ) : (
                     <SidebarMenuButton asChild>
-                      <Link href={item.url || "#"}>
+                      <Link
+                        href={item.url || "#"}
+                        onClick={item.onClick}
+                      >
                         <item.icon />
                         <span>{item.title}</span>
                       </Link>

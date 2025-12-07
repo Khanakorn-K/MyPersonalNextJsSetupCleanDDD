@@ -1,6 +1,5 @@
 import { CategoriesEntity } from "@/entity/CategoriesEntity";
-import { create } from "zustand";
-
+import { create } from '@/store/restAllStore';
 type State = {
   category: CategoriesEntity;
 };
