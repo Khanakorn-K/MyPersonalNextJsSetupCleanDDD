@@ -29,6 +29,7 @@ const PostList = () => {
           authorName={post.authorName}
           categories={post.categories}
           tags={post.tags}
+          authorId={post.authorId}
         />
       ))}
 

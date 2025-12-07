@@ -3,7 +3,7 @@ import Image from "next/image";
 import { PostListentity } from "../entity/PostListentity";
 import { Calendar, ArrowRight, Clock } from "lucide-react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/Button";
 const CardPost = ({
   id = "",
@@ -16,7 +16,9 @@ const CardPost = ({
   authorName = "anonymounse",
   categories = [],
   tags = [],
+  authorId = "ไม่มี",
 }: Partial<PostListentity>) => {
+  const session = useSession();
   return (
     <article className="group w-1/2 h-1/2 relative flex flex-col overflow-hidden rounded-2xl bg-card text-card-foreground shadow-sm ring-1 ring-border transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
       {/* Image Section */}
@@ -32,6 +34,7 @@ const CardPost = ({
 
         {/* categories */}
         <div className="absolute left-4 top-4 flex gap-2 flex-wrap">
+          categories
           {categories.map((category) => (
             <span
               key={category.id}
@@ -43,6 +46,7 @@ const CardPost = ({
         </div>
         {/* tag */}
         <div className="absolute right-4 top-4 flex gap-2 flex-wrap">
+          tags
           {tags.map((tag) => (
             <span
               key={tag.id}
@@ -88,12 +92,14 @@ const CardPost = ({
               className="rounded-full w-10 h-10"
             />
             <h2>ผู้เขียน : {authorName}</h2>
-            <Link
-              className="bg-red-600 p-2 rounded-full"
-              href={`createPost?postId=${id}`}
-            >
-              <p>แก้ไข้</p>
-            </Link>
+            {authorId === session.data?.user.id && (
+              <Link
+                className="bg-destructive h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 items-center flex text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60"
+                href={`createPost?postId=${id}`}
+              >
+                <p>แก้ไข้</p>
+              </Link>
+            )}
           </div>
         </div>
       </div>

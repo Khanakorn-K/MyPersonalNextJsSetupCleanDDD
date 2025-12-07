@@ -120,6 +120,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+  const session = await getServerSession(authOptions);
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
@@ -133,7 +134,12 @@ export async function PUT(request: NextRequest) {
         { status: 400 }
       );
     }
-
+    if (!session) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 }
+      );
+    }
     const categoryIds: { id: string }[] = [];
     if (categories && Array.isArray(categories) && categories.length > 0) {
       const results = await Promise.all(

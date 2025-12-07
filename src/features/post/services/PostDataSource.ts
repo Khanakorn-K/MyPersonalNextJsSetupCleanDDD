@@ -5,13 +5,13 @@ import { PostResponseModel } from "../models/PostResponseModel";
 import { PostEntity } from "../entity/PostEntity";
 
 export const PostDataSource = {
-  fetchPostOneById: async (id: PostRequestModel | unknown): Promise<PostEntity> => {
-    const response = await apiClient.post<ApiResponse<PostResponseModel>>(
+  fetchPostOneById: async (id: string): Promise<PostEntity> => {
+    const response = await apiClient.get<ApiResponse<PostResponseModel>>(
       "/post",
-      {id}
+      { params: { id: id } }
     );
     const result = response.data;
-    console.log("resultresult",result)
+    console.log("resultresult", result);
     return new PostEntity(result);
   },
 };

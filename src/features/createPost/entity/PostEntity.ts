@@ -1,10 +1,7 @@
-import {
-  Category,
-  PostResponseResultModel,
-} from "../models/PostResponseModel";
+import { Category, PostResponseResultModel } from "../models/PostResponseModel";
 
 export class PostEntity {
- id: string;
+  id: string;
   title: string;
   slug: string;
   excerpt: string;
@@ -30,7 +27,7 @@ export class PostEntity {
     this.authorId = entity.authorId ?? "";
     this.createdAt = entity.createdAt ?? "";
     this.updatedAt = entity.updatedAt ?? "";
-    this.categories = entity.categories ?? "";
-    this.tags = entity.tags ?? "";
+    this.categories = entity.categories ?? [];
+    this.tags = entity.tags ?? [];
   }
 }

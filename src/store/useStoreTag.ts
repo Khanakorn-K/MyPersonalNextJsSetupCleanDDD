@@ -1,6 +1,5 @@
 import { TagsEntity } from "@/entity/TagsEntity";
-import { create } from "zustand";
-
+import { create } from '@/store/restAllStore';
 type State = {
   tag: TagsEntity;
 };
