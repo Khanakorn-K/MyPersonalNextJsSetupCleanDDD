@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
-
+  console.log("token", token);
   if (!token && request.nextUrl.pathname.startsWith("/createPost")) {
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
