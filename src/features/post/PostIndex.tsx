@@ -91,9 +91,10 @@ const PostIndex = () => {
                 </p>
               )}
 
-              <section className="prose prose-invert max-w-none text-sm leading-relaxed text-slate-100">
-                {post.content}
-              </section>
+              <section
+                className="prose prose-invert max-w-none text-sm leading-relaxed text-slate-100"
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
             </article>
 
             {/* 2. ส่วน Comment ต่อท้าย */}
