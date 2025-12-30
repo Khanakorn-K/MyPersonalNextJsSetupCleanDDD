@@ -1,9 +1,12 @@
+'use client'
 import { Input } from '@/components/ui/Input'
-import React from 'react'
+import React, { useState } from 'react'
 
 const SearchBar = () => {
+    const [search, setSearch] = useState<string>("")
+
     return (
-        <Input className="w-1/2" placeholder="Search..." />
+        <Input className="w-1/2" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
     )
 }
 
