@@ -6,6 +6,7 @@ import { useCreatePost } from "./hooks/useCreatePost";
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { useGlobal } from "@/hooks/globalHook";
+import TiptapEditor from "@/components/ui/TiptapEditor";
 
 export default function CreatePostIndex() {
   const {
@@ -111,6 +112,7 @@ export default function CreatePostIndex() {
               />
             </div>
 
+            {/* Content */}
             <div className="space-y-2">
               <label
                 htmlFor="content"
@@ -118,15 +120,11 @@ export default function CreatePostIndex() {
               >
                 Content <span className="text-red-500">*</span>
               </label>
-              <textarea
-                id="content"
-                name="content"
-                value={formData.content}
-                onChange={handleChange}
-                required
-                rows={12}
-                className="w-full px-4 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground resize-none font-mono text-sm"
-                placeholder="Write your post content (Markdown supported)"
+              <TiptapEditor
+                content={formData.content}
+                onChange={(html) =>
+                  setFormData((prev) => ({ ...prev, content: html }))
+                }
               />
             </div>
 
@@ -309,8 +307,8 @@ export default function CreatePostIndex() {
                 {postId
                   ? "UpdatePost"
                   : isLoading
-                  ? "Creating..."
-                  : "Create Post"}
+                    ? "Creating..."
+                    : "Create Post"}
               </Button>
               <Button
                 type="button"

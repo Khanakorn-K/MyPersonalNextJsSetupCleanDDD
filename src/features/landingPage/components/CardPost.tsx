@@ -72,9 +72,8 @@ const CardPost = ({
         </h3>
 
         <p className="mb-4 line-clamp-2 flex-1 text-sm text-muted-foreground leading-relaxed">
-          {content}
+          {content.replace(/<[^>]+>/g, '')}
         </p>
-
         {/* Footer */}
         <div className="mt-auto flex items-center justify-between border-t border-border pt-4">
           <Link href={`/post?id=${id}`}>
