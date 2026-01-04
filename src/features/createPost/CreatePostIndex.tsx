@@ -16,7 +16,9 @@ export default function CreatePostIndex() {
     setFormData,
     handleSubmit,
     handleChange,
+    addTag,
     removeTag,
+    addCategory,
     removeCategory,
     router,
     postId,
@@ -27,42 +29,30 @@ export default function CreatePostIndex() {
   const [manualCategory, setManualCategory] = useState("");
   const [manualTag, setManualTag] = useState("");
 
-  const addCategory = (value: string) => {
-    const trimmed = value.trim();
-    if (!trimmed) return;
-    if (!formData.categories?.includes(trimmed)) {
-      setFormData((prev) => ({
-        ...prev,
-        categories: [...(prev.categories || []), trimmed],
-      }));
-    }
-    setManualCategory("");
-  };
-
   const handleManualCategoryKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
       addCategory(manualCategory);
+      setManualCategory("");
     }
-  };
-
-  const addTag = (value: string) => {
-    const trimmed = value.trim();
-    if (!trimmed) return;
-    if (!formData.tags?.includes(trimmed)) {
-      setFormData((prev) => ({
-        ...prev,
-        tags: [...(prev.tags || []), trimmed],
-      }));
-    }
-    setManualTag("");
   };
 
   const handleManualTagKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
       addTag(manualTag);
+      setManualTag("");
     }
+  };
+
+  const handleAddCategoryClick = () => {
+    addCategory(manualCategory);
+    setManualCategory("");
+  };
+
+  const handleAddTagClick = () => {
+    addTag(manualTag);
+    setManualTag("");
   };
 
   return (
@@ -112,7 +102,6 @@ export default function CreatePostIndex() {
               />
             </div>
 
-            {/* Content */}
             <div className="space-y-2">
               <label
                 htmlFor="content"
@@ -184,7 +173,7 @@ export default function CreatePostIndex() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => addCategory(manualCategory)}
+                    onClick={handleAddCategoryClick}
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
@@ -247,7 +236,7 @@ export default function CreatePostIndex() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => addTag(manualTag)}
+                    onClick={handleAddTagClick}
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
